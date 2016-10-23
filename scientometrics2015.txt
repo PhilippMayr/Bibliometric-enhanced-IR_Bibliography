@@ -1,0 +1,165 @@
+@article{DBLP:journals/scientometrics/MayrS15,
+  author    = {Philipp Mayr and
+               Andrea Scharnhorst},
+  title     = {Combining bibliometrics and information retrieval: preface},
+  journal   = {Scientometrics},
+  volume    = {102},
+  number    = {3},
+  pages     = {2191--2192},
+  year      = {2015},
+  url       = {http://dx.doi.org/10.1007/s11192-015-1529-2},
+  doi       = {10.1007/s11192-015-1529-2},
+  timestamp = {Fri, 20 Feb 2015 14:32:41 +0100},
+  biburl    = {http://dblp.uni-trier.de/rec/bib/journals/scientometrics/MayrS15},
+  bibsource = {dblp computer science bibliography, http://dblp.org}
+}
+
+@article{DBLP:journals/scientometrics/MayrS15a,
+  author    = {Philipp Mayr and
+               Andrea Scharnhorst},
+  title     = {Scientometrics and information retrieval: weak-links revitalized},
+  journal   = {Scientometrics},
+  volume    = {102},
+  number    = {3},
+  pages     = {2193--2199},
+  year      = {2015},
+  url       = {http://dx.doi.org/10.1007/s11192-014-1484-3},
+  doi       = {10.1007/s11192-014-1484-3},
+  timestamp = {Fri, 20 Feb 2015 14:32:41 +0100},
+  biburl    = {http://dblp.uni-trier.de/rec/bib/journals/scientometrics/MayrS15a},
+  bibsource = {dblp computer science bibliography, http://dblp.org}
+}
+
+@article{DBLP:journals/scientometrics/Wolfram15,
+  author    = {Dietmar Wolfram},
+  title     = {The symbiotic relationship between information retrieval and informetrics},
+  journal   = {Scientometrics},
+  volume    = {102},
+  number    = {3},
+  pages     = {2201--2214},
+  year      = {2015},
+  url       = {http://dx.doi.org/10.1007/s11192-014-1479-0},
+  doi       = {10.1007/s11192-014-1479-0},
+  timestamp = {Fri, 20 Feb 2015 14:32:41 +0100},
+  biburl    = {http://dblp.uni-trier.de/rec/bib/journals/scientometrics/Wolfram15},
+  bibsource = {dblp computer science bibliography, http://dblp.org}
+}
+
+@article{DBLP:journals/scientometrics/Glanzel15,
+  author    = {Wolfgang Gl{\"{a}}nzel},
+  title     = {Bibliometrics-aided retrieval: where information retrieval meets scientometrics},
+  journal   = {Scientometrics},
+  volume    = {102},
+  number    = {3},
+  pages     = {2215--2222},
+  year      = {2015},
+  url       = {http://dx.doi.org/10.1007/s11192-014-1480-7},
+  doi       = {10.1007/s11192-014-1480-7},
+  timestamp = {Fri, 20 Feb 2015 14:32:41 +0100},
+  biburl    = {http://dblp.uni-trier.de/rec/bib/journals/scientometrics/Glanzel15},
+  bibsource = {dblp computer science bibliography, http://dblp.org}
+}
+
+@article{DBLP:journals/scientometrics/Zitt15,
+  author    = {Michel Zitt},
+  title     = {Meso-level retrieval: IR-bibliometrics interplay and hybrid citation-words
+               methods in scientific fields delineation},
+  journal   = {Scientometrics},
+  volume    = {102},
+  number    = {3},
+  pages     = {2223--2245},
+  year      = {2015},
+  url       = {http://dx.doi.org/10.1007/s11192-014-1482-5},
+  doi       = {10.1007/s11192-014-1482-5},
+  timestamp = {Fri, 20 Feb 2015 14:32:41 +0100},
+  biburl    = {http://dblp.uni-trier.de/rec/bib/journals/scientometrics/Zitt15},
+  bibsource = {dblp computer science bibliography, http://dblp.org}
+}
+
+@article{DBLP:journals/scientometrics/Bar-IlanL15,
+  author    = {Judit Bar{-}Ilan and
+               Mark Levene},
+  title     = {The hw-rank: an h-index variant for ranking web pages},
+  journal   = {Scientometrics},
+  volume    = {102},
+  number    = {3},
+  pages     = {2247--2253},
+  year      = {2015},
+  url       = {http://dx.doi.org/10.1007/s11192-014-1477-2},
+  doi       = {10.1007/s11192-014-1477-2},
+  timestamp = {Fri, 20 Feb 2015 14:32:41 +0100},
+  biburl    = {http://dblp.uni-trier.de/rec/bib/journals/scientometrics/Bar-IlanL15},
+  bibsource = {dblp computer science bibliography, http://dblp.org}
+}
+
+@article{DBLP:journals/scientometrics/KarlssonHSFONN15,
+  author    = {Alexander Karlsson and
+               Bj{\"{o}}rn Hammarfelt and
+               H. Joe Steinhauer and
+               G{\"{o}}ran Falkman and
+               Nasrine Olson and
+               Gustaf Nelhans and
+               Jan Michael Nolin},
+  title     = {Modeling uncertainty in bibliometrics and information retrieval: an
+               information fusion approach},
+  journal   = {Scientometrics},
+  volume    = {102},
+  number    = {3},
+  pages     = {2255--2274},
+  year      = {2015},
+  url       = {http://dx.doi.org/10.1007/s11192-014-1481-6},
+  doi       = {10.1007/s11192-014-1481-6},
+  timestamp = {Wed, 28 Oct 2015 17:28:18 +0100},
+  biburl    = {http://dblp.uni-trier.de/rec/bib/journals/scientometrics/KarlssonHSFONN15},
+  bibsource = {dblp computer science bibliography, http://dblp.org}
+}
+
+@article{DBLP:journals/scientometrics/White15,
+  author    = {Howard D. White},
+  title     = {Co-cited author retrieval and relevance theory: examples from the
+               humanities},
+  journal   = {Scientometrics},
+  volume    = {102},
+  number    = {3},
+  pages     = {2275--2299},
+  year      = {2015},
+  url       = {http://dx.doi.org/10.1007/s11192-014-1483-4},
+  doi       = {10.1007/s11192-014-1483-4},
+  timestamp = {Fri, 20 Feb 2015 14:32:41 +0100},
+  biburl    = {http://dblp.uni-trier.de/rec/bib/journals/scientometrics/White15},
+  bibsource = {dblp computer science bibliography, http://dblp.org}
+}
+
+@article{DBLP:journals/scientometrics/AbbasiF15,
+  author    = {Muhammad Kamran Abbasi and
+               Ingo Frommholz},
+  title     = {Cluster-based polyrepresentation as science modelling approach for
+               information retrieval},
+  journal   = {Scientometrics},
+  volume    = {102},
+  number    = {3},
+  pages     = {2301--2322},
+  year      = {2015},
+  url       = {http://dx.doi.org/10.1007/s11192-014-1478-1},
+  doi       = {10.1007/s11192-014-1478-1},
+  timestamp = {Fri, 20 Feb 2015 14:32:41 +0100},
+  biburl    = {http://dblp.uni-trier.de/rec/bib/journals/scientometrics/AbbasiF15},
+  bibsource = {dblp computer science bibliography, http://dblp.org}
+}
+
+@article{DBLP:journals/scientometrics/MutschkeM15,
+  author    = {Peter Mutschke and
+               Philipp Mayr},
+  title     = {Science models for search: a study on combining scholarly information
+               retrieval and scientometrics},
+  journal   = {Scientometrics},
+  volume    = {102},
+  number    = {3},
+  pages     = {2323--2345},
+  year      = {2015},
+  url       = {http://dx.doi.org/10.1007/s11192-014-1485-2},
+  doi       = {10.1007/s11192-014-1485-2},
+  timestamp = {Fri, 20 Feb 2015 14:32:41 +0100},
+  biburl    = {http://dblp.uni-trier.de/rec/bib/journals/scientometrics/MutschkeM15},
+  bibsource = {dblp computer science bibliography, http://dblp.org}
+}
