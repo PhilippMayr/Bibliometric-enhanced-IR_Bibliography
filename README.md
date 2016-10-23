@@ -8,3 +8,11 @@ All workshop papers are freely available in full text via CEUR workshop proceedi
 
 Special Issues
 * Special Issue "Combining Bibliometrics and Information Retrieval" in Scientometrics
+
+## Contributing
+
+You are welcome to provide additions at GitHub: <https://github.com/PhilippMayr/Bibliometric-enhanced-IR_Bibliography>
+
+## License
+
+The bibliography (all `.bib` files) can be used freely as public domain (CC Zero).
