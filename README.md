@@ -9,6 +9,9 @@ All workshop papers are freely available in full text via CEUR workshop proceedi
 Special Issues
 * Special Issue "Combining Bibliometrics and Information Retrieval" in Scientometrics
 
+other workshops
+* "Combining Bibliometrics and Information Retrieval" workshop at ISSI 2013
+
 ## Contributing
 
 You are welcome to provide additions at GitHub: <https://github.com/PhilippMayr/Bibliometric-enhanced-IR_Bibliography>
