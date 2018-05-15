@@ -10,6 +10,7 @@ Special Issues
 * Special Issue "Combining Bibliometrics and Information Retrieval" in Scientometrics 2015
 * Special Issue "Bibliometric-enhanced information retrieval and natural language processing for digital libraries" in International Journal on Digital Libraries 2018
 * Special Issue "Bibliometric-enhanced IR" in Scientometrics 2018
+* Research Topic "Mining Scientific Papers: NLP-enhanced Bibliometrics" Frontiers in Research Metrics and Analytics
 
 other workshops
 * "Combining Bibliometrics and Information Retrieval" workshop at ISSI 2013, 2017
