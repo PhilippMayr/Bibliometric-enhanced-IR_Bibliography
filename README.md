@@ -15,7 +15,7 @@ All workshop papers are freely available in full text via CEUR workshop proceedi
 * Special Issue "Bibliometric-enhanced Information Retrieval" in Scientometrics 2018
 * Research Topic "Mining Scientific Papers: NLP-enhanced Bibliometrics" in Frontiers in Research Metrics and Analytics 2018
 
-## Workshop reports in SIGIR Forum
+## Workshop reports in SIGIR Forum and other journals
 
 ## other workshops
 * "Combining Bibliometrics and Information Retrieval" workshop at ISSI 2013, 2017
