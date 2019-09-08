@@ -6,14 +6,14 @@ All workshop papers are freely available in full text via CEUR workshop proceedi
 
 * BIR - Bibliometric-enhanced Information Retrieval (ECIR 2014, 2015, 2016, 2017, 2018, 2019)
 * CLBIB - Computational Linguistics and Bibliometrics (ISSI 2015, 2017)
-* BIRNDL - Bibliometric-enhanced Information Retrieval and Natural Language Processing for Digital Libraries (JCDL 2016), (SIGIR 2017, 2018)
+* BIRNDL - Bibliometric-enhanced Information Retrieval and Natural Language Processing for Digital Libraries (JCDL 2016), (SIGIR 2017, 2018, 2019)
 
 ## Special Issues
 
 * Special Issue "Combining Bibliometrics and Information Retrieval" in Scientometrics 2015
 * Special Issue "Bibliometric-enhanced information retrieval and natural language processing for digital libraries" in International Journal on Digital Libraries 2018
 * Special Issue "Bibliometric-enhanced Information Retrieval" in Scientometrics 2018
-* Research Topic "Mining Scientific Papers: NLP-enhanced Bibliometrics" in Frontiers in Research Metrics and Analytics 2018
+* Research Topic "Mining Scientific Papers: NLP-enhanced Bibliometrics" in Frontiers in Research Metrics and Analytics 2019
 
 ## Workshop reports in SIGIR Forum and other journals
 
