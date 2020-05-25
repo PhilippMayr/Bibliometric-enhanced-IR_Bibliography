@@ -4,7 +4,7 @@ All workshop papers are freely available in full text via CEUR workshop proceedi
 
 ## Workshops
 
-* BIR - Bibliometric-enhanced Information Retrieval (ECIR 2014, 2015, 2016, 2017, 2018, 2019)
+* BIR - Bibliometric-enhanced Information Retrieval (ECIR 2014, 2015, 2016, 2017, 2018, 2019, 2020)
 * CLBIB - Computational Linguistics and Bibliometrics (ISSI 2015, 2017)
 * BIRNDL - Bibliometric-enhanced Information Retrieval and Natural Language Processing for Digital Libraries (JCDL 2016), (SIGIR 2017, 2018, 2019)
 
@@ -18,7 +18,7 @@ All workshop papers are freely available in full text via CEUR workshop proceedi
 ## Workshop reports in SIGIR Forum and other journals
 
 ## other workshops
-* "Combining Bibliometrics and Information Retrieval" workshop at ISSI 2013, 2017
+* "Combining Bibliometrics and Information Retrieval" workshop at ISSI 2013
 
 ## Contributing
 
