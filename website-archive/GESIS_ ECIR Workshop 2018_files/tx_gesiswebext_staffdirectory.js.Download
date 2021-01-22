@@ -1,0 +1,254 @@
+//$(document).ready(function() {
+    //function param(name) {
+        //return (location.search.split(name + '=')[1] || '').split('&')[0];
+    //}
+
+    //function getPersonList(tab, alpha, unit_id, team_id, style) {
+        //if (!team_id || team_id == "undefined") {
+            //team_id = "all";
+        //}
+
+        //if (typeof page !== 'undefined')
+        //window.location.href = "index.php?id=" + page.trim() + "&" +
+            //"tx_gesiswebext_staffdirectory[action]=team&" +
+            //"tx_gesiswebext_staffdirectory[controller]=StaffDirectory&" +
+            //"style=" + style + "&" +
+            //"alpha=" + alpha + "&" +
+            //"unit_id=" + unit_id + "&" +
+            //"team_id=" + team_id + "&" +
+            //"tab=" + tab + "&" +
+            //"L=" + lang_id
+    //}
+
+    //function restoreFromCookie(cookie) {
+        //cookie = JSON.parse(cookie);
+        //getPersonList(cookie.tab, cookie.alpha, cookie.unit_id, cookie.team_id, cookie.style);
+    //}
+
+    //function setCookie(cookie_name, tab, alpha, unit_id, team_id, style) {
+        //Cookies.set(cookie_name, "{ \"tab\":\"" + tab + "\", \"alpha\":\"" + alpha + "\", \"unit_id\":\"" + unit_id + "\", \"team_id\":\"" + team_id + "\", \"style\":\"" + style + "\"}", {
+            //expires: 1
+        //});
+    //}
+
+//if (typeof i18n_abteilungauswaehlen !== 'undefined')
+    //$('#units').prepend('<option value="0" selected>' + i18n_abteilungauswaehlen + '...</option>');
+
+    //if (!Cookies.get("staffdirectory_alpha")) {
+        //setCookie("staffdirectory_alpha", "alpha", "A", "", "", "tiles");
+    //}
+
+    //if (!Cookies.get("staffdirectory_orga")) {
+        //setCookie("staffdirectory_orga", "orga", "", "", "", "tiles");
+    //}
+
+    //if (!Cookies.get("staffdirectory")) {
+        //setCookie("staffdirectory", "alpha", "A", "", "", "tiles");
+    //}
+
+    ////console.log(document.cookie);
+
+    //if (!param("tab")) {
+        ////console.log("cookie");
+        //if (Cookies.get("staffdirectory")) {
+            ////cookie = JSON.parse(Cookies.get("staffdirectory"));
+            ////Cookies.remove("staffdirectory");
+            //restoreFromCookie(Cookies.get("staffdirectory"));
+        //}
+    //}
+
+    //if (param("tab") == "orga") {
+        //$("#orga-tab").tab('show');
+    //}
+    //if (param("tab") == "alpha") {
+        //$("#alpha-tab").tab('show');
+    //}
+
+    //if ($("#unit").val() == "...") {
+        //$(".gs_orga_tiles").attr('src', function(index, src) {
+            //return src.replace('blue', 'orange');
+        //})
+    //}
+
+    ////if (!param(tab) && !Cookies.get("staffdirectory")) {
+    ////tab = "alpha";
+    ////Cookies.set("staffdirectory_alpha", "{ \"tab\":\"" + tab + "\", \"alpha\":\"" + alpha + "\", \"unit_id\":\"" + unit_id + "\", \"team_id\":\"" + team_id + "\", \"style\":\"" + style + "\"}", {
+    ////expires: 1
+    ////});
+    ////getPersonList();
+    ////}
+
+    ////if ($("#alpha-tab").hasClass("active")) {
+    ////getPersonsFromChar(alpha, "tiles");
+    ////}
+
+    //$('#alpha > li').filter(function() {
+        //return $(this).text().trim() == param("alpha");
+    //}).addClass("gs_active");
+
+    //if (param("unit_id")) {
+        //$('#units').val(param("unit_id"));
+    //};
+
+    //if (param("team_id")) {
+        //$('#teams').val(param("team_id"));
+    //}
+
+    //$('#alpha-tab').click(function() {
+        ////if (!param(tab) && !Cookies.get("staffdirectory"))
+        //restoreFromCookie(Cookies.get("staffdirectory_alpha"));
+    //});
+
+    //$('#alpha > li').click(function(event) {
+        //event.preventDefault();
+        //$('#alpha > li').each(function() {
+            //$(this).removeClass("gs_active");
+        //})
+        //$(this).addClass("gs_active");
+        //alpha = $(this).text().trim();
+        //if ($(".gs_alpha_tiles").attr('src').match(/orange/))
+            //style = "tiles";
+        //else if ($(".gs_alpha_table").attr('src').match(/orange/))
+            //style = "table";
+
+        //setCookie("staffdirectory_alpha", "alpha", $(this).text().trim(), "", "", style)
+        //setCookie("staffdirectory", "alpha", $(this).text().trim(), "", "", style)
+        //getPersonList("alpha", $(this).text().trim(), "", "", style);
+    //});
+
+    //$('#orga-tab').click(function() {
+        ////if ($("#units").val() == 0) {
+        ////$(".gs_orga_tiles").attr('src', function(index, src) {
+        ////return src.replace('blue', 'orange');
+        ////})
+        ////}
+        //$("#staff").empty();
+        //restoreFromCookie(Cookies.get("staffdirectory_orga"));
+        ////$("#staff").empty();
+    //});
+
+    //$('#units').change(function(e) {
+        //$('#teams').val("all");
+        //$('.gs_team_chooser').hide();
+        //var unit_id = "";
+        //var team_id = "";
+        //var style = "";
+        //unit_id = $("#units").val();
+        //if ($(this).val() != 1)
+            //team_id = "all";
+        //else
+            //team_id = "head";
+        //if ($(".gs_orga_tiles").attr('src').match(/orange/))
+            //style = "tiles";
+        //else if ($(".gs_orga_table").attr('src').match(/orange/))
+            //style = "table";
+        //else
+            //style = "tiles";
+        //setCookie("staffdirectory_orga", "orga", "", unit_id, team_id, style)
+        //setCookie("staffdirectory", "orga", "", unit_id, team_id, style)
+        //getPersonList("orga", "", unit_id, team_id, style);
+    //});
+
+    //$('#teams').change(function(e) {
+        //var unit_id = $("#units").val();
+        //var team_id = $("#teams").val();
+        //var style = "";
+        //if ($(".gs_orga_tiles").attr('src').match(/orange/))
+            //style = "tiles";
+        //else if ($(".gs_orga_table").attr('src').match(/orange/))
+            //style = "table";
+        //setCookie("staffdirectory_orga", "orga", "", unit_id, team_id, style)
+        //setCookie("staffdirectory", "orga", "", unit_id, team_id, style)
+        //getPersonList("orga", "", unit_id, team_id, style);
+    //});
+
+    //$('.gs_alpha_tiles').click(function() {
+        ////if (Cookies.get("staffdirectory_alpha")) {
+        ////cookie = JSON.parse(Cookies.get("staffdirectory_alpha"));
+        ////cookie.style = "tiles";
+        ////Cookies.set("staffdirectory_alpha", JSON.stringify(cookie), {
+        ////expires: 1
+        ////});
+        ////}
+        ////console.log($('#alpha > li').hasClass("gs_active").text());
+        //var alpha = "";
+        //$('#alpha > li').each(function() {
+            //if ($(this).hasClass("gs_active")) {
+                //alpha = $(this).text().trim();
+            //}
+        //});
+        //setCookie("staffdirectory_alpha", "alpha", alpha, "", "", "tiles")
+        //setCookie("staffdirectory", "alpha", alpha, "", "", "tiles")
+        //getPersonList("alpha", alpha, "", "", "tiles");
+    //});
+
+    //$('.gs_alpha_table').click(function() {
+        ////if (Cookies.get("staffdirectory_alpha")) {
+        ////cookie = JSON.parse(Cookies.get("staffdirectory_alpha"));
+        ////cookie.style = "table";
+        ////Cookies.set("staffdirectory_alpha", JSON.stringify(cookie), {
+        ////expires: 1
+        ////});
+        ////}
+        //var alpha = "";
+        //$('#alpha > li').each(function() {
+            //if ($(this).hasClass("gs_active")) {
+                //alpha = $(this).text().trim();
+            //}
+        //});
+        //setCookie("staffdirectory_alpha", "alpha", alpha, "", "", "table")
+        //setCookie("staffdirectory", "alpha", alpha, "", "", "table")
+        //getPersonList("alpha", alpha, "", "", "table");
+    //});
+
+    //$('.gs_orga_tiles').click(function() {
+        ////if (Cookies.get("staffdirectory_orga")) {
+        ////cookie = JSON.parse(Cookies.get("staffdirectory_orga"));
+        ////cookie.style = "tiles";
+        ////Cookies.set("staffdirectory_orga", JSON.stringify(cookie), {
+        ////expires: 1
+        ////});
+        ////}
+        //var unit_id = $("#units").val();
+        //var team_id = $("#teams").val();
+        //setCookie("staffdirectory_orga", "orga", "", unit_id, team_id, "tiles")
+        //setCookie("staffdirectory", "orga", "", unit_id, team_id, "tiles")
+        //getPersonList("orga", "", unit_id, team_id, "tiles");
+    //});
+
+    //$('.gs_orga_table').click(function() {
+        ////if (Cookies.get("staffdirectory_orga")) {
+        ////cookie = JSON.parse(Cookies.get("staffdirectory_orga"));
+        ////cookie.style = "table";
+        ////Cookies.set("staffdirectory_orga", JSON.stringify(cookie), {
+        ////expires: 1
+        ////});
+        ////}
+        //var unit_id = $("#units").val();
+        //var team_id = $("#teams").val();
+        //setCookie("staffdirectory_orga", "orga", "", unit_id, team_id, "table")
+        //setCookie("staffdirectory", "orga", "", unit_id, team_id, "table")
+        //getPersonList("orga", "", unit_id, team_id, "table");
+    //});
+
+    //if (param("tab") == "orga" && param("style") == "tiles") {
+        //$(".gs_orga_tiles").attr('src', function(index, src) {
+            //return src.replace('blue', 'orange')
+        //})
+    //}
+    //if (param("tab") == "orga" && param("style") == "table") {
+        //$(".gs_orga_table").attr('src', function(index, src) {
+            //return src.replace('blue', 'orange')
+        //})
+    //}
+    //if (param("tab") == "alpha" && param("style") == "tiles") {
+        //$(".gs_alpha_tiles").attr('src', function(index, src) {
+            //return src.replace('blue', 'orange')
+        //})
+    //}
+    //if (param("tab") == "alpha" && param("style") == "table") {
+        //$(".gs_alpha_table").attr('src', function(index, src) {
+            //return src.replace('blue', 'orange')
+        //})
+    //}
+//});

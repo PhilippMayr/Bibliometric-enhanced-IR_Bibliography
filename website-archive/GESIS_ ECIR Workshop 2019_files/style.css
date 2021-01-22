@@ -1,0 +1,204 @@
+#gris_staff {
+    float: left;
+    display: block;
+    width: 100%;
+    margin-top: 1.0rem;
+    font-size: 0.9rem;
+}
+
+#gris_staff .gs_3_col {
+    padding: 0;
+}
+
+#gris_staff .tile .person {
+    padding: 1.0rem
+}
+#gris_staff .tile a:hover {
+    color: #ff6100;
+}
+
+#gris_staff .tile {
+    background: #e6eaee;
+}
+#gris_staff td a {
+    text-decoration: none;
+}
+#gris_staff td a:hover {
+        color: #ff6100
+}
+
+#gris_staff .tile .person a{
+    text-decoration: none;
+}
+
+#gris_staff .tile .person h3,
+#gris_staff .tile .person h3 span {
+    font-size: 1.5rem;
+    font-weight: 100;
+    line-height: 1.8rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: none;
+}
+
+#gris_staff .tile .person .gs_email:hover {
+    background: url(img/icons/gs_icon_mail_blue.svg) no-repeat
+ }
+
+ #selectDepartment:focus, #selectTeam:focus{
+    background:#ff6100;
+}
+
+#selectDepartment, #selectTeam{
+    margin: 0.3rem 0 0 0 !important;
+    background:#58748f;
+    cursor:pointer;
+    color: #fff;
+    border: none;
+    padding: 0.45rem 0.8rem;
+    font-family: inherit;
+    font-size: 1.0rem;
+    width: 90%;
+}
+
+#selectTeam:disabled {
+    color: #fff;
+    background-color:#6c757d;
+    border-color:#6c757d;
+}
+
+#selectDepartment:hover, #selectTeam:hover{
+    background:#ff6100;
+}
+/*.gs_vcard_toggle:hover .gs_vcard, .gs_vcard_toggle:focus-within .gs_vcard{*/
+    /*display: block;*/
+/*}*/
+.gris_staff_email{
+    background:url(../Icons/gs_icon_mail_blue.svg) no-repeat;
+    text-decoration:none;
+    line-height:1.0rem;
+    padding-left:1.5rem;
+    background-position: 0 50%;
+}
+
+.gris_staff_email:hover{
+    background:url(../Icons/gs_icon_mail_orange.svg) no-repeat;
+    background-position: 0 50%;
+}
+
+.gris_staff_vcard {
+    background: url(../Icons/gs_icon_vcard_blue.svg) no-repeat;
+    padding-left: 1.5rem;
+    text-decoration: none;
+    background-position: 0 50%
+}
+
+.gris_staff_vcard:hover {
+    background: url(../Icons/gs_icon_vcard_orange.svg) no-repeat;
+    background-position: 0 50%
+}
+
+.gris_staff_phone {
+    background: url(../Icons/gs_icon_phone_blue.svg) no-repeat;
+    padding: 0.1rem 0 0.3rem 1.5rem;
+    text-decoration: none;
+}
+
+#gris_staff_detail .person {
+   float: left
+}
+
+#gris_staff_detail h1 span {
+    font-size: 1.5rem
+}
+
+#gris_staff_detail h3 {
+    font-size: 1.3rem;
+    border-bottom: 0.1rem solid #58748f;
+    margin-bottom: 1.0rem;
+    padding-top: 1.5rem
+}
+
+#gris_staff_detail .gris_staff_detail_vcard {
+    padding: 1.0rem;
+    margin-bottom: 1.0rem;
+    background: #e6eaee
+}
+
+.gs_vcard > ul >li:last-child > .gris_staff_person_vcard {
+    border: none;
+}
+.gs_vcard .gris_staff_person_vcard {
+    border-bottom: 0.2rem solid white;
+}
+
+.gris_staff_phone:hover {
+    background: url(../Icons/gs_icon_phone_orange.svg) no-repeat
+}
+.gris_staff_cv {
+    background: url(../Icons/gs_icon_cv_blue.svg) no-repeat;
+    padding-left: 1.5rem;
+    text-decoration: none;
+    background-position: 0 50%
+}
+.gris_staff_cv:hover {
+    background: url(../Icons/gs_icon_cv_orange.svg) no-repeat;
+    background-position: 0 50%
+}
+
+.letter_list {
+    margin: 1.0rem auto;
+    margin: 0 auto;
+    margin-top: 5px;
+    display: table;
+    vertical-align: middle;
+    border-spacing: 0.2rem;
+    padding: 0;
+    display:flex;
+    flex-wrap:wrap;
+}
+
+.letter_list li {
+    border: none !important;
+    background: #e6eaee;
+    margin: 0 0.2rem 0.2rem 0 !important;
+    padding: 0 !important;
+    width: 1.7rem;
+    height: 1.7rem;
+    vertical-align: middle;
+    text-align: center;
+    list-style-type:none;
+}
+
+.letter_list li a {
+    text-decoration: none;
+    display: block;
+    height: 100%;
+    padding-top: 0.1rem;
+}
+
+.letter_list li a:hover {
+    background: #58748f;
+    color: #FFFFFF;
+}
+.letter_list li a:focus {
+    background: #58748f;
+    color: #FFFFFF;
+}
+.letter_list li.gs_active{
+    background: #ff6100;
+}
+.letter_list li.gs_active > a {
+    color: #fff;
+}
+.gs_staff_link {
+    text-decoration: none
+}
+
+.gris_staff_person_vcard a {
+    text-decoration: none;
+    padding-bottom:unset;
+}
+.gris_staff_person_vcard h3 a {
+    font-size:1.1rem;
+}

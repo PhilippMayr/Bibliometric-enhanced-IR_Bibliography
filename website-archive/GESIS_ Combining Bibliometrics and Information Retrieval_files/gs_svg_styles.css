@@ -1,0 +1,25 @@
+@charset "utf-8";
+
+/* CSS Document */
+
+
+text, tspan {
+	font-family: "Source Sans Pro", Arial, Verdana, Helvetica, sans-serif;
+	font-size: 14px;
+}
+
+#data text {
+	font-size: 24px;
+}
+
+rect {
+	/* fill: #ff00aa; */
+}
+
+#boxen g:hover rect{
+	fill: #ff6100;
+}
+
+#infotext text {
+	display: none;
+}

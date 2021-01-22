@@ -1,0 +1,1009 @@
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _instanceof(left, right) { if (right != null && typeof Symbol !== "undefined" && right[Symbol.hasInstance]) { return !!right[Symbol.hasInstance](left); } else { return left instanceof right; } }
+
+// To generate ie11-compatible gs_megamenu.babel.js, use https://babeljs.io/repl with preset "es2015" and source type "Script".
+
+/*
+*   This content is licensed according to the W3C Software License at
+*   https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+*/
+activateFader = function activateFader() {
+  document.getElementsByClassName("gs_fader").forEach(function (fader) {
+    return fader.style = "display: block";
+  });
+};
+
+deactivateFader = function deactivateFader() {
+  document.getElementsByClassName("gs_fader").forEach(function (fader) {
+    return fader.style = "display: none";
+  });
+};
+
+addToFirstChars = function addToFirstChars(array, node) {
+  var textContent = node.textContent.trim();
+  array.push(textContent.substring(0, 1).toLowerCase());
+};
+
+getIndexFirstChars = function getIndexFirstChars(startIndex, char) {
+  for (var i = startIndex; i < this.firstChars.length; i++) {
+    if (char === this.firstChars[i]) {
+      return i;
+    }
+  }
+
+  return -1;
+};
+
+var keyCode = Object.freeze({
+  'TAB': 9,
+  'RETURN': 13,
+  'ESC': 27,
+  'SPACE': 32,
+  'PAGEUP': 33,
+  'PAGEDOWN': 34,
+  'END': 35,
+  'HOME': 36,
+  'LEFT': 37,
+  'UP': 38,
+  'RIGHT': 39,
+  'DOWN': 40
+});
+var userIntents = Object.freeze({
+  VISIT_LINK: 'VISIT_LINK',
+  GO_TO_PREVIOUS_ITEM: 'GO_TO_PREVIOUS_ITEM',
+  GO_TO_NEXT_ITEM: 'GO_TO_NEXT_ITEM',
+  GO_TO_FIRST_ITEM: 'GO_TO_FIRST_ITEM',
+  GO_TO_LAST_ITEM: 'GO_TO_LAST_ITEM',
+  OPEN_SUBMENU: 'OPEN_SUBMENU',
+  OPEN_SUBMENU_AND_GO_TO_SUBMENU_LAST_ITEM: 'OPEN_SUBMENU_AND_GO_TO_SUBMENU_LAST_ITEM',
+  CLOSE_MENU: 'CLOSE_MENU',
+  SEARCH_ITEM: 'SEARCH_ITEM',
+  TAB_OUT: 'TAB_OUT',
+  UNDEFINED: 'UNDEFINED'
+});
+
+var Menubutton = function Menubutton(domNode) {
+  this.domNode = domNode;
+  this.popupMenu = false;
+  this.hasFocus = false;
+  this.hasHover = false;
+};
+
+Menubutton.prototype.init = function () {
+  this.domNode.setAttribute('aria-haspopup', 'true');
+  this.domNode.addEventListener('keydown', this.handleKeydown.bind(this));
+  this.domNode.addEventListener('click', this.handleClick.bind(this));
+  this.domNode.addEventListener('focus', this.handleFocus.bind(this));
+  this.domNode.addEventListener('blur', this.handleBlur.bind(this));
+  this.domNode.addEventListener('mouseover', this.handleMouseover.bind(this));
+  this.domNode.addEventListener('mouseout', this.handleMouseout.bind(this)); // initialize pop up menus
+
+  var popupMenu = document.getElementById(this.domNode.getAttribute('aria-controls'));
+
+  if (popupMenu) {
+    if (popupMenu.getAttribute('aria-activedescendant')) {
+      this.popupMenu = new PopupMenuActionActivedescendant(popupMenu, this);
+      this.popupMenu.init();
+    } else {
+      this.popupMenu = new Menubar(document.getElementById('gs_megamenu'), this);
+      this.popupMenu.init();
+    }
+  }
+};
+
+Menubutton.prototype.handleKeydown = function (event) {
+  var flag = false;
+
+  switch (event.keyCode) {
+    case keyCode.SPACE:
+    case keyCode.RETURN:
+    case keyCode.DOWN:
+      if (this.popupMenu) {
+        this.popupMenu.open();
+        this.popupMenu.setFocusToFirstItem();
+      }
+
+      flag = true;
+      break;
+
+    case keyCode.UP:
+      if (this.popupMenu) {
+        this.popupMenu.open();
+        this.popupMenu.setFocusToLastItem();
+        flag = true;
+      }
+
+      break;
+
+    default:
+      break;
+  }
+
+  if (flag) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+};
+
+Menubutton.prototype.handleClick = function (event) {
+  if (this.domNode.getAttribute('aria-expanded') == 'true') {
+    this.popupMenu.close(true);
+  } else {
+    this.popupMenu.open();
+    this.popupMenu.setFocusToFirstItem();
+  }
+};
+
+Menubutton.prototype.handleFocus = function (event) {
+  this.popupMenu.hasFocus = true;
+};
+
+Menubutton.prototype.handleBlur = function (event) {
+  this.popupMenu.hasFocus = false;
+};
+
+Menubutton.prototype.handleMouseover = function (event) {
+  this.hasHover = true;
+};
+
+Menubutton.prototype.handleMouseout = function (event) {
+  this.hasHover = false;
+};
+
+var Menubar = function Menubar(domNode, controllerObj) {
+  // Check whether menubarNode is a DOM element
+  if (_instanceof(!domNode, Element)) {
+    throw new TypeError(domNode + ' is not a DOM Element.');
+  } // Check whether menubarNode has descendant elements
+
+
+  if (domNode.childElementCount === 0) {
+    throw new Error(domNode + ' has no element children.');
+  } // Check whether all menubarNodeChildren have each an 'a' element as first child
+
+
+  var menubarNodeChildren = domNode.children;
+
+  var _iterator = _createForOfIteratorHelper(menubarNodeChildren),
+      _step;
+
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var menubarNodeChild = _step.value;
+      var menubarNodeFirstGrandchild = menubarNodeChild.firstElementChild;
+
+      if (menubarNodeFirstGrandchild && menubarNodeFirstGrandchild.tagName !== 'A') {
+        throw new Error(domNode + ' has child elements that are not A elements.');
+      }
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+
+  this.isMenubar = true; // TODO rename to this.menubarNode
+  // domNode is of element type "ul"
+
+  this.domNode = domNode;
+  this.controller = controllerObj;
+  this.menubarItems = []; // See Menubar init method
+
+  this.firstChars = []; // See Menubar init method
+  // TODO rename to this.firstMenubarItem
+
+  this.firstItem = null; // See Menubar init method
+  //TODO rename to this.lastMenubarItem
+
+  this.lastItem = null; // See Menubar init method
+
+  this.hasFocus = false; // See MenubarItem handleFocus, handleBlur
+
+  this.hasHover = false; // See Menubar handleMouseover, handleMouseout
+};
+/*
+*   @method Menubar.prototype.init
+*
+*   @desc
+*       Adds ARIA role to the menubar node
+*       Traverse menubar children for A elements to configure each A element as a ARIA menuitem
+*       and populate menuitems array. Initialize firstItem and lastItem properties.
+*/
+
+
+Menubar.prototype.init = function () {
+  // compared to PopupMenu, Menubar does not add its own mouseover and mouseout
+  // event handlers.
+  // Traverse the element children of menubarNode: configure each with
+  // menuitem role behavior and store reference in menubarItems array.
+  var menubarNodeChildren = this.domNode.children;
+
+  var _iterator2 = _createForOfIteratorHelper(menubarNodeChildren),
+      _step2;
+
+  try {
+    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+      var menubarNodeChild = _step2.value;
+      // a menubarNodeChild is an "li" with at least one nested "a" element and 
+      // possibly a another nested "ul" element (submenu)
+      var menubarItemNode = menubarNodeChild.firstElementChild;
+
+      if (menubarItemNode && menubarItemNode.tagName === 'A') {
+        var menubarItem = new MenubarItem(menubarItemNode, this);
+        menubarItem.init();
+        this.menubarItems.push(menubarItem);
+        addToFirstChars(this.firstChars, menubarItemNode);
+      }
+    } // Use populated menubarItems to initialize firstItem and lastItem.
+
+  } catch (err) {
+    _iterator2.e(err);
+  } finally {
+    _iterator2.f();
+  }
+
+  var numItems = this.menubarItems.length;
+
+  if (numItems > 0) {
+    this.firstItem = this.menubarItems[0]; // initially, make firstMenubarItem accessible by usertab,
+    // see https://www.w3.org/TR/wai-aria-practices/#kbd_roving_tabindex
+    // see https://www.w3.org/TR/wai-aria-practices/#keyboard-interaction-12
+
+    this.firstItem.domNode.tabIndex = 0;
+    this.lastItem = this.menubarItems[numItems - 1];
+  }
+
+  this.domNode.addEventListener('focusin', this.handleContainedFocusChange.bind(this));
+  this.domNode.addEventListener('focusout', this.handleContainedFocusChange.bind(this));
+  this.domNode.addEventListener('mouseenter', this.handleMouseenter.bind(this));
+  this.domNode.addEventListener('mouseleave', this.handleMouseleave.bind(this));
+};
+
+Menubar.prototype.handleMouseenter = function (event) {
+  activateFader();
+};
+
+Menubar.prototype.handleMouseleave = function (event) {
+  deactivateFader();
+};
+
+Menubar.prototype.handleContainedFocusChange = function (event) {
+  thisContainer = this.domNode;
+  eventType = event.type;
+  eventTarget = event.target;
+
+  if ('focusin' === eventType) {
+    previouslyFocusedElement = event.relatedTarget;
+    wasFocusPreviouslyAlreadyInsideContainer = thisContainer.contains(previouslyFocusedElement);
+
+    if (wasFocusPreviouslyAlreadyInsideContainer) {} else {
+      activateFader();
+    }
+  } else if ('focusout' === eventType) {
+    newlyFocusedElement = event.relatedTarget;
+    isFocusStillInsideContainer = thisContainer.contains(newlyFocusedElement);
+
+    if (isFocusStillInsideContainer) {} else {
+      deactivateFader();
+    }
+  }
+};
+
+Menubar.prototype.open = function () {
+  this.controller.domNode.setAttribute('aria-expanded', 'true');
+  this.domNode.setAttribute('data-open', 'true');
+};
+
+Menubar.prototype.close = function () {
+  this.controller.domNode.setAttribute('aria-expanded', 'false');
+  this.domNode.setAttribute('data-open', 'false');
+};
+
+Menubar.prototype.setFocusToController = function () {
+  this.controller.domNode.focus();
+}; // REFACTOR rename to setFocusToMenubarItem = function (toBeFocusedMenubarItem)
+
+
+Menubar.prototype.setFocusToItem = function (newItem) {
+  var anyMenuBarItemWasTabbaleAndExpanded = this.menubarItems.some(function (mbi) {
+    return mbi.domNode.tabIndex == 0 && mbi.isExpanded();
+  });
+  this.menubarItems.forEach(function (mbi) {
+    mbi.domNode.tabIndex = -1;
+    mbi.popupMenu ? mbi.isExpanded() && mbi.popupMenu.close() : null;
+  });
+  newItem.domNode.focus();
+  newItem.domNode.tabIndex = 0;
+
+  if (anyMenuBarItemWasTabbaleAndExpanded && newItem.popupMenu) {
+    newItem.popupMenu.open();
+  }
+};
+
+Menubar.prototype.setFocusToFirstItem = function () {
+  this.setFocusToItem(this.firstItem);
+};
+
+Menubar.prototype.setFocusToLastItem = function () {
+  this.setFocusToItem(this.lastItem);
+};
+
+Menubar.prototype.setFocusToPreviousItem = function (currentItem) {
+  var newItem;
+
+  if (currentItem === this.firstItem) {
+    newItem = this.lastItem;
+  } else {
+    var index = this.menubarItems.indexOf(currentItem);
+    newItem = this.menubarItems[index - 1];
+  }
+
+  this.setFocusToItem(newItem);
+};
+
+Menubar.prototype.setFocusToNextItem = function (currentItem) {
+  var newItem;
+
+  if (currentItem === this.lastItem) {
+    newItem = this.firstItem;
+  } else {
+    var index = this.menubarItems.indexOf(currentItem);
+    newItem = this.menubarItems[index + 1];
+  }
+
+  this.setFocusToItem(newItem);
+};
+
+Menubar.prototype.setFocusByFirstCharacter = function (currentItem, char) {
+  var start,
+      index,
+      char = char.toLowerCase(); // Get start index for search based on position of currentItem
+
+  start = this.menubarItems.indexOf(currentItem) + 1;
+
+  if (start === this.menubarItems.length) {
+    start = 0;
+  } // Check remaining slots in the menu
+
+
+  index = this.getIndexFirstChars(start, char); // If not found in remaining slots, check from beginning
+
+  if (index === -1) {
+    index = this.getIndexFirstChars(0, char);
+  } // If match was found...
+
+
+  if (index > -1) {
+    this.setFocusToItem(this.menubarItems[index]);
+  }
+};
+
+Menubar.prototype.getIndexFirstChars = getIndexFirstChars; // RENAME menuObj / this.menu to menubar
+// RENAME domNode to menubarItemNode
+
+var MenubarItem = function MenubarItem(domNode, menuObj) {
+  // menu is Menubar controller
+  this.menu = menuObj; // domNode / menubarItemNode is of element type 'a'
+
+  this.domNode = domNode; // if null, then no popupMenu exists.
+  // Otherwise, this.popupMenu is the PopupMenu controller for popup menu
+
+  this.popupMenu = null;
+  this.hasFocus = false;
+  this.hasHover = false;
+  this.isMenubarItem = true;
+};
+
+handleListItemClick = function handleListItemClick(event) {
+  if (event.target === this.parentLi) {
+    event.stopPropagation();
+    var clickedParentLi = this.parentLi;
+
+    if (this.popupMenu) {
+      var currentOpenState = this.popupMenu.domNode.dataset.open;
+
+      if ("true" === currentOpenState) {
+        this.popupMenu.close();
+        this.popupMenu.setFocusToController();
+      } else {
+        this.popupMenu.open();
+        this.popupMenu.setFocusToFirstItem();
+      }
+    }
+  }
+};
+
+MenubarItem.prototype.init = function () {
+  // by default, menubarItems are focusable only by javascript, not tabpress
+  // https://www.w3.org/TR/wai-aria-practices/#kbd_roving_tabindex
+  // Menubar's init method gives first menubarItem a tabindex of 0, therefore
+  // that first menubarItem will be focusable by javascript AND tabpress
+  this.domNode.tabIndex = -1;
+  this.parentLi = this.domNode.parentNode;
+  this.parentLi.addEventListener('click', this.handleListItemClick.bind(this));
+  this.parentLi.addEventListener('mousedown', function (event) {
+    return event.preventDefault();
+  }); // prevent currently focused element to loose focus to nirvana
+
+  this.domNode.addEventListener('keydown', this.handleKeydown.bind(this));
+  this.domNode.addEventListener('focus', this.handleFocus.bind(this));
+  this.domNode.addEventListener('blur', this.handleBlur.bind(this));
+  this.domNode.addEventListener('mouseover', this.handleMouseover.bind(this));
+  this.domNode.addEventListener('mouseleave', this.handleMouseleave.bind(this)); // Initialize pop up menus
+
+  var maybeSiblingUlPopupMenuElement = this.domNode.nextElementSibling;
+
+  if (maybeSiblingUlPopupMenuElement && maybeSiblingUlPopupMenuElement.tagName === 'UL') {
+    this.popupMenu = new PopupMenu(maybeSiblingUlPopupMenuElement, this, true);
+    this.popupMenu.init();
+  }
+};
+
+MenubarItem.prototype.handleListItemClick = handleListItemClick;
+
+MenubarItem.prototype.isExpanded = function () {
+  var isExpanded = this.domNode.getAttribute('aria-expanded') === 'true';
+  return isExpanded;
+};
+
+MenubarItem.prototype.setExpanded = function (value) {
+  if (value) {
+    this.domNode.setAttribute('aria-expanded', 'true');
+  } else {
+    this.domNode.setAttribute('aria-expanded', 'false');
+  }
+};
+
+MenubarItem.prototype.handleKeydown = function (event) {
+  var char = event.key;
+  var preventDefaultBrowserKeydownBehavior = false;
+
+  function isPrintableCharacter(str) {
+    return str.length === 1 && str.match(/\S/);
+  }
+
+  var userIntent;
+
+  switch (event.keyCode) {
+    case keyCode.RETURN:
+      userIntent = userIntents.VISIT_LINK;
+      break;
+
+    case keyCode.SPACE:
+      userIntent = userIntents.OPEN_SUBMENU;
+      break;
+
+    case keyCode.DOWN:
+      userIntent = gs_is_mobile ? userIntents.GO_TO_NEXT_ITEM : userIntents.OPEN_SUBMENU;
+      break;
+
+    case keyCode.LEFT:
+      userIntent = gs_is_mobile ? userIntents.CLOSE_MENU : userIntents.GO_TO_PREVIOUS_ITEM;
+      break;
+
+    case keyCode.RIGHT:
+      userIntent = gs_is_mobile ? userIntents.OPEN_SUBMENU : userIntents.GO_TO_NEXT_ITEM;
+      break;
+
+    case keyCode.UP:
+      userIntent = gs_is_mobile ? userIntents.GO_TO_PREVIOUS_ITEM : userIntents.OPEN_SUBMENU_AND_GO_TO_SUBMENU_LAST_ITEM;
+      break;
+
+    case keyCode.HOME:
+    case keyCode.PAGEUP:
+      userIntent = userIntents.GO_TO_FIRST_ITEM;
+      break;
+
+    case keyCode.END:
+    case keyCode.PAGEDOWN:
+      userIntent = userIntents.GO_TO_LAST_ITEM;
+      break;
+
+    case keyCode.TAB:
+      userIntent = userIntents.TAB_OUT;
+      break;
+
+    case keyCode.ESC:
+      userIntent = userIntents.CLOSE_MENU;
+      break;
+
+    default:
+      if (isPrintableCharacter(char)) {
+        userIntent = userIntents.SEARCH_ITEM;
+      } else {
+        userIntent = userIntents.UNDEFINED;
+      }
+
+      break;
+  }
+
+  switch (userIntent) {
+    case userIntents.VISIT_LINK:
+      break;
+
+    case userIntents.OPEN_SUBMENU:
+      if (this.popupMenu) {
+        this.popupMenu.open();
+        this.popupMenu.setFocusToFirstItem();
+        preventDefaultBrowserKeydownBehavior = true;
+      }
+
+      break;
+
+    case userIntents.GO_TO_PREVIOUS_ITEM:
+      this.menu.setFocusToPreviousItem(this);
+      preventDefaultBrowserKeydownBehavior = true;
+      break;
+
+    case userIntents.GO_TO_NEXT_ITEM:
+      this.menu.setFocusToNextItem(this);
+      preventDefaultBrowserKeydownBehavior = true;
+      break;
+
+    case userIntents.OPEN_SUBMENU_AND_GO_TO_SUBMENU_LAST_ITEM:
+      if (this.popupMenu) {
+        this.popupMenu.open();
+        this.popupMenu.setFocusToLastItem();
+        preventDefaultBrowserKeydownBehavior = true;
+      }
+
+      break;
+
+    case userIntents.GO_TO_FIRST_ITEM:
+      this.menu.setFocusToFirstItem();
+      preventDefaultBrowserKeydownBehavior = true;
+      break;
+
+    case userIntents.GO_TO_LAST_ITEM:
+      this.menu.setFocusToLastItem();
+      preventDefaultBrowserKeydownBehavior = true;
+      break;
+
+    case userIntents.TAB_OUT:
+      if (this.popupMenu) {
+        this.popupMenu.close(true);
+      }
+
+      break;
+
+    case userIntents.CLOSE_MENU:
+      if (this.popupMenu) {
+        this.popupMenu.close(true);
+      }
+
+      this.menu.close();
+      this.menu.setFocusToController();
+      break;
+
+    case userIntents.SEARCH_ITEM:
+      this.menu.setFocusByFirstCharacter(this, char);
+      preventDefaultBrowserKeydownBehavior = true;
+      break;
+
+    default:
+      break;
+  }
+
+  if (preventDefaultBrowserKeydownBehavior) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+};
+
+MenubarItem.prototype.handleFocus = function () {
+  this.menu.hasFocus = true;
+};
+
+MenubarItem.prototype.handleBlur = function () {
+  this.menu.hasFocus = false;
+};
+
+MenubarItem.prototype.handleMouseover = function () {
+  this.hasHover = true;
+
+  if (this.popupMenu && !gs_is_mobile) {
+    this.popupMenu.open();
+  }
+};
+
+MenubarItem.prototype.handleMouseleave = function (event) {
+  var newHoveredElement = event.relatedTarget;
+  this.hasHover = false;
+
+  if (this.popupMenu && !gs_is_mobile) {
+    if (!this.popupMenu.domNode.contains(newHoveredElement)) {
+      this.popupMenu.close(false);
+    }
+  }
+}; // RENAME domNode to popupMenuNode
+// RENAME controllerObj to controllingWidget
+
+
+var PopupMenu = function PopupMenu(domNode, controllerObj, isMainPopup) {
+  // Check whether domNode is a DOM element
+  if (_instanceof(!domNode, Element)) {
+    throw new TypeError(domNode + ' is not a DOM Element.');
+  } // Check whether domNode has child elements
+
+
+  if (domNode.childElementCount === 0) {
+    throw new Error(domNode + ' has no element children.');
+  } // Check whether all popupMenuNodeChildren have each an 'a' element as first child
+
+
+  var popupMenuNodeChildren = domNode.children;
+
+  var _iterator3 = _createForOfIteratorHelper(popupMenuNodeChildren),
+      _step3;
+
+  try {
+    for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+      var popupMenuNodeChild = _step3.value;
+      var popupMenuNodeFirstGrandchild = popupMenuNodeChild.firstElementChild;
+
+      if (popupMenuNodeFirstGrandchild && popupMenuNodeFirstGrandchild.tagName !== 'A') {
+        throw new Error(domNode + ' has descendant elements that are not A elements.');
+      }
+    }
+  } catch (err) {
+    _iterator3.e(err);
+  } finally {
+    _iterator3.f();
+  }
+
+  this.isMenubar = false;
+  this.isMainPopup = isMainPopup; // domNode / popupMenuNode is of element type 'ul'
+
+  this.domNode = domNode; // this.controller is either a MenubarItem or a MenuItem instance
+
+  this.controller = controllerObj; // TODO Rename to menuItems
+
+  this.menuitems = []; // See PopupMenu init method
+
+  this.firstChars = []; // See PopupMenu init method
+
+  this.firstItem = null; // See PopupMenu init method
+
+  this.lastItem = null; // See PopupMenu init method
+
+  this.hasFocus = false; // See MenuItem handleFocus, handleBlur
+
+  this.hasHover = false; // See PopupMenu handleMouseover, handleMouseout
+};
+/*
+*   @method PopupMenu.prototype.init
+*
+*   @desc
+*       Add domNode event listeners for mouseover and mouseout. Traverse
+*       domNode children to configure each menuitem and populate menuitems
+*       array. Initialize firstItem and lastItem properties.
+*/
+
+
+PopupMenu.prototype.init = function () {
+  if (this.isMainPopup) {
+    this.domNode.addEventListener('mouseleave', this.handleMouseleave.bind(this));
+  } // Traverse the element children of domNode: configure each with
+  // menuitem role behavior and store reference in menuitems array.
+
+
+  var popupMenuNodeChildren = this.domNode.children;
+
+  var _iterator4 = _createForOfIteratorHelper(popupMenuNodeChildren),
+      _step4;
+
+  try {
+    for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+      var popupMenuNodeChild = _step4.value;
+      var menuItemNode = popupMenuNodeChild.firstElementChild;
+
+      if (menuItemNode && menuItemNode.tagName === 'A') {
+        var menuItem = new MenuItem(menuItemNode, this);
+        menuItem.init();
+        this.menuitems.push(menuItem);
+        addToFirstChars(this.firstChars, menuItemNode);
+      }
+    } // Use populated menuitems array to initialize firstItem and lastItem.
+
+  } catch (err) {
+    _iterator4.e(err);
+  } finally {
+    _iterator4.f();
+  }
+
+  var numItems = this.menuitems.length;
+
+  if (numItems > 0) {
+    this.firstItem = this.menuitems[0];
+    this.lastItem = this.menuitems[numItems - 1]; // no tabIndex fiddely like in Menubar init because popupmenus should
+    // not participate in tabbability
+    // see https://www.w3.org/TR/wai-aria-practices/#keyboard-interaction-12
+  }
+};
+
+PopupMenu.prototype.handleMouseleave = function () {
+  if (!gs_is_mobile) {
+    this.hasHover = false;
+    this.close(false);
+  }
+};
+
+PopupMenu.prototype.setFocusToController = function (command, flag) {
+  if (typeof command !== 'string') {
+    command = '';
+  }
+
+  function setFocusToMenubarItem(controller, close) {
+    while (controller) {
+      if (controller.isMenubarItem) {
+        controller.domNode.focus();
+        return controller;
+      } else {
+        if (close) {
+          controller.menu.close(true);
+        }
+
+        controller.hasFocus = false;
+      }
+
+      controller = controller.menu.controller;
+    }
+
+    return false;
+  }
+
+  if (command === '') {
+    if (this.controller && this.controller.domNode) {
+      this.controller.domNode.focus();
+    }
+
+    return;
+  }
+
+  if (!this.controller.isMenubarItem) {
+    this.controller.domNode.focus();
+    this.close();
+
+    if (command === 'next') {
+      var menubarItem = setFocusToMenubarItem(this.controller, false);
+
+      if (menubarItem) {
+        menubarItem.menu.setFocusToNextItem(menubarItem, flag);
+      }
+    }
+  } else {
+    if (command === 'previous') {
+      this.controller.menu.setFocusToPreviousItem(this.controller, flag);
+    } else if (command === 'next') {
+      this.controller.menu.setFocusToNextItem(this.controller, flag);
+    }
+  }
+};
+
+PopupMenu.prototype.setFocusToFirstItem = function () {
+  this.firstItem.domNode.focus();
+};
+
+PopupMenu.prototype.setFocusToLastItem = function () {
+  this.lastItem.domNode.focus();
+};
+
+PopupMenu.prototype.setFocusToPreviousItem = function (currentItem) {
+  var index;
+
+  if (currentItem === this.firstItem) {
+    this.lastItem.domNode.focus();
+  } else {
+    index = this.menuitems.indexOf(currentItem);
+    this.menuitems[index - 1].domNode.focus();
+  }
+};
+
+PopupMenu.prototype.setFocusToNextItem = function (currentItem) {
+  var index;
+
+  if (currentItem === this.lastItem) {
+    this.firstItem.domNode.focus();
+  } else {
+    index = this.menuitems.indexOf(currentItem);
+    this.menuitems[index + 1].domNode.focus();
+  }
+};
+
+PopupMenu.prototype.setFocusByFirstCharacter = function (currentItem, char) {
+  var start,
+      index,
+      char = char.toLowerCase(); // Get start index for search based on position of currentItem
+
+  start = this.menuitems.indexOf(currentItem) + 1;
+
+  if (start === this.menuitems.length) {
+    start = 0;
+  } // Check remaining slots in the menu
+
+
+  index = this.getIndexFirstChars(start, char); // If not found in remaining slots, check from beginning
+
+  if (index === -1) {
+    index = this.getIndexFirstChars(0, char);
+  } // If match was found...
+
+
+  if (index > -1) {
+    this.menuitems[index].domNode.focus();
+  }
+};
+
+PopupMenu.prototype.getIndexFirstChars = getIndexFirstChars;
+
+PopupMenu.prototype.open = function () {
+  this.domNode.setAttribute('data-open', 'true');
+
+  if (this.isMainPopup) {
+    this.controller.setExpanded(true);
+  }
+};
+
+PopupMenu.prototype.close = function (force) {
+  this.domNode.setAttribute('data-open', 'false');
+
+  if (this.isMainPopup) {
+    var controllerHasHover = this.controller.hasHover;
+    var containsHover = this.hasHover || controllerHasHover;
+    var anyNestedPopupMenuHasKeyboardFocus = this.menuitems.some(function (menuItem) {
+      return menuItem.popupMenu && menuItem.popupMenu.hasFocus;
+    });
+    var containsFocus = this.hasFocus || anyNestedPopupMenuHasKeyboardFocus;
+    var containsUserAttention = containsHover || containsFocus;
+
+    if (force || !containsUserAttention) {
+      this.controller.setExpanded(false);
+    }
+  }
+};
+
+var MenuItem = function MenuItem(domNode, menuObj) {
+  if ((typeof popupObj === "undefined" ? "undefined" : _typeof(popupObj)) !== 'object') {
+    popupObj = false;
+  } // domNode is of element type 'a'
+
+
+  this.domNode = domNode; // menu / menuObj is containing PopupMenu controller
+
+  this.menu = menuObj;
+  this.popupMenu = false;
+  this.isMenubarItem = false;
+};
+
+MenuItem.prototype.init = function () {
+  // MenuItem's domNode shall not be tabbable, but can still be given focus with .focus()
+  // see https://www.w3.org/TR/wai-aria-practices/#wai-aria-roles-states-and-properties-13
+  this.domNode.tabIndex = -1;
+  this.parentLi = this.domNode.parentNode;
+  this.parentLi.addEventListener('click', this.handleListItemClick.bind(this));
+  this.parentLi.addEventListener('mousedown', function (event) {
+    return event.preventDefault();
+  }); // prevent currently focused element to loose focus to nirvana
+
+  this.domNode.addEventListener('keydown', this.handleKeydown.bind(this));
+  this.domNode.addEventListener('focus', this.handleFocus.bind(this));
+  this.domNode.addEventListener('blur', this.handleBlur.bind(this));
+  var nextElement = this.domNode.nextElementSibling;
+
+  if (nextElement && nextElement.tagName === 'UL') {
+    this.popupMenu = new PopupMenu(nextElement, this, false);
+    this.popupMenu.init();
+  }
+};
+
+MenuItem.prototype.handleListItemClick = handleListItemClick;
+
+MenuItem.prototype.handleKeydown = function (event) {
+  var tgt = event.currentTarget,
+      char = event.key,
+      flag = false,
+      clickEvent;
+
+  function isPrintableCharacter(str) {
+    return str.length === 1 && str.match(/\S/);
+  }
+
+  switch (event.keyCode) {
+    case keyCode.RETURN:
+      break;
+
+    case keyCode.UP:
+      this.menu.setFocusToPreviousItem(this);
+      flag = true;
+      break;
+
+    case keyCode.DOWN:
+      this.menu.setFocusToNextItem(this);
+      flag = true;
+      break;
+
+    case keyCode.LEFT:
+      if (gs_is_mobile) {
+        this.menu.setFocusToController();
+      } else {
+        // to implement https://www.w3.org/TR/wai-aria-practices/#keyboard-interaction-12
+        // on full screen popup menubar menus, when navigating left, directly open previous popup menu
+        // this.menu.setFocusToController('previous', true);
+        // but because this is actually confusing in navigation, we don't implement this behavior
+        this.menu.setFocusToController();
+      }
+
+      this.menu.close(true);
+      flag = true;
+      break;
+
+    case keyCode.RIGHT:
+    case keyCode.SPACE:
+      if (this.popupMenu) {
+        this.popupMenu.open();
+        this.popupMenu.setFocusToFirstItem();
+      }
+
+      flag = true;
+      break;
+
+    case keyCode.HOME:
+    case keyCode.PAGEUP:
+      this.menu.setFocusToFirstItem();
+      flag = true;
+      break;
+
+    case keyCode.END:
+    case keyCode.PAGEDOWN:
+      this.menu.setFocusToLastItem();
+      flag = true;
+      break;
+
+    case keyCode.ESC:
+      this.menu.setFocusToController();
+      this.menu.close(true);
+      flag = true;
+      break;
+
+    case keyCode.TAB:
+      // when tabbing, tab out of menu and close all open menus
+      // see https://www.w3.org/TR/wai-aria-practices/#keyboard-interaction-12
+      var currentMenu = this.menu;
+
+      while (currentMenu && !currentMenu.isMenubar) {
+        currentMenu.setFocusToController();
+        currentMenu.close(true);
+        currentMenu = currentMenu.controller.menu;
+      }
+
+      break;
+
+    default:
+      if (isPrintableCharacter(char)) {
+        this.menu.setFocusByFirstCharacter(this, char);
+        flag = true;
+      }
+
+      break;
+  }
+
+  if (flag) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+};
+
+MenuItem.prototype.handleFocus = function (event) {
+  this.menu.hasFocus = true;
+};
+
+MenuItem.prototype.handleBlur = function (event) {
+  this.menu.hasFocus = false;
+};

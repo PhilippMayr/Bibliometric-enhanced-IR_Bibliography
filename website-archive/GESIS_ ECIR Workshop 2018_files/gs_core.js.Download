@@ -1,0 +1,350 @@
+// GESIS Core script
+// (c) 2015 by Holger Heuser, GESIS
+var gs_active_color = "#ff6100";
+var gs_back_label = "zurück";
+var gs_is_mobile = false;
+
+// Toggle for search hitlist
+var show_search = false;
+
+// Indicates if page ist reloaded
+var gs_init = true;
+
+// configure Parsley (used by Powermail) for better accessibility (see https://stackoverflow.com/a/22591965/923560 )
+// until Parsley provides better accessibility out-of-the-box (see https://github.com/guillaumepotier/Parsley.js/issues/640 ).
+window.ParsleyConfig = {
+  errorsWrapper: '<ul class="parsley-errors-list" aria-live="assertive"></ul>',
+  trigger: 'keyup',
+  validationThreshold: 0 // see https://github.com/guillaumepotier/Parsley.js/issues/1179
+};
+
+
+// Adapt screen to mobile view
+$(window).resize(function() {
+ 	gs_adapt_mobile();
+});
+
+// document.addEventListener('DOMContentLoaded', function() { behaves slightly different, because data-parsley-trigger="keyup" is bound too late to be registered correctly
+$(document).ready(function() {
+  language = $('html').attr('lang');
+  console.log("Current language: " + language);
+  // Adapt to viewport
+  gs_adapt_mobile();
+  
+  // Search functionality
+  // gs_complete();
+  init_gws();
+  
+  // Megamenu
+  var toggleButton = document.getElementById('gs_mm_toggle_button');
+  if (null != toggleButton) {
+    var menubutton = new Menubutton(toggleButton);
+    menubutton.init();
+    
+    // in responsive layouts, when clicking the megamenu skip link, then directly open mega menu
+    var megamenuSkipLink = document.getElementById('skip-link-megamenu');
+    if (null != megamenuSkipLink) {
+      megamenuSkipLink.addEventListener('click', function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        menubutton.popupMenu.open();
+        menubutton.popupMenu.setFocusToFirstItem();
+      });
+    }
+  }
+  
+  // Rootline
+  var popupControllers = document.getElementsByClassName('gs_dropdown_toggle').forEach(function(element) {
+    var popupNode = element.querySelector('.gs_dropdown_content');
+    if (popupNode) {
+      var popup = new Popup(popupNode, element, fadeMainContent, unfadeMainContent);
+    }
+  });
+  
+  // Slider with 3 items
+  tns({
+    container: '.gs_3col_slider',
+    items: 1,
+    responsive: {
+      640: {
+        items: 2
+      },
+      960: {
+        items: 3
+      }
+    },
+    gutter: 16,
+    slideBy: 'page',
+    controls: true,
+    controlsText: ['', ''],
+    nav: true,
+    navPosition: 'top',
+    arrowKeys: true,
+    speed: 200,
+    autoplay: false,
+    autoplayButtonOutput: false,
+    mouseDrag: true,
+    swipeAngle: false,
+    rewind: true,
+    locale: language,
+    useLocalStorage: false
+  });
+  
+  // Slider with 1 item
+  tns({
+    container: '.gs_single_slider',
+    items: 1,
+    slideBy: 'page',
+    controls: true,
+    controlsText: ['', ''],
+    nav: true,
+    navPosition: 'top',
+    arrowKeys: true,
+    autoplay: true,
+    autoplayTimeout: 10000,
+    speed: 200,
+    autoplayPosition: 'top',
+    autoplayText: ['', ''],
+    autoplayHoverPause: true,
+    autoplayButton: false,
+    autoplayButtonOutput: true,
+    mouseDrag: true,
+    swipeAngle: false,
+    rewind: true,
+    locale: language,
+    useLocalStorage: false
+  });
+  
+  // Banner Slider with 1 item
+  tns({
+    container: '.gs_news_compact_slider',
+    items: 1,
+    slideBy: 'page',
+    controlsText: ['', ''],
+    nav: true,
+    navPosition: 'top',
+    arrowKeys: true,
+    autoplay: true,
+    autoplayTimeout: 10000,
+    speed: 200,
+    autoplayPosition: 'top',
+    autoplayText: ['', ''],
+    autoplayHoverPause: true,
+    autoplayButton: false,
+    autoplayButtonOutput: true,
+    mouseDrag: true,
+    swipeAngle: false,
+    rewind: true,
+    locale: language,
+    useLocalStorage: false
+  });
+  
+  // ul slider
+  tns({
+    container: '.gs_single_slider_wrapper ul',
+    items: 1,
+    slideBy: 'page',
+    controls: true,
+    controlsText: ['', ''],
+    nav: true,
+    navPosition: 'top',
+    arrowKeys: true,
+    autoplay: true,
+    autoplayTimeout: 10000,
+    speed: 200,
+    autoplayPosition: 'top',
+    autoplayText: ['', ''],
+    autoplayHoverPause: true,
+    autoplayButton: false,
+    autoplayButtonOutput: true,
+    mouseDrag: true,
+    swipeAngle: false,
+    rewind: true,
+    locale: language,
+    useLocalStorage: false
+  });
+  
+  // JavaScript-based workaround for skip link animation in IE 11 and Edge
+  // as these browsers don't support :focus-within pseudostate as of 2020-05-20
+  document.getElementsByClassName('skip-links').forEach(function(ele) {
+    ele.addEventListener('focusin', onSkipLinksContainedFocusChange);
+    ele.addEventListener('focusout', onSkipLinksContainedFocusChange);
+    });
+  
+  // For accessibility and usability reasons,
+  // show input placeholder texts below input field. Also see gs_form.cssp.
+  document.querySelectorAll('.tx-powermail *[placeholder]').forEach(function(element) {
+    let placeholderDiv = document.createElement('div');
+    placeholderDiv.textContent = (language === 'de'? 'Anmerkung: ' : 'Remark: ') + element.getAttribute('placeholder');
+    placeholderDiv.classList.add('powermail-placeholder');
+    placeholderDiv.id = element.id + 'placeholder';
+    element.parentNode.insertBefore(placeholderDiv, element.nextSibling);
+  });
+  
+  // See https://github.com/einpraegsam/powermail/issues/547
+  document.querySelectorAll('[data-parsley-trigger]').forEach(function(element) {
+    element.setAttribute('data-parsley-trigger', 'keyup');
+  });
+  
+  // Enhance Powermail / Parsley form accessibility by adding aria-invalid
+  // attributes during input validation,
+  // ( see http://parsleyjs.org/doc/index.html#psly-usage-global-configuration#events-list )
+  //until Parsley provides better accessibility out-of-the-box (see https://github.com/guillaumepotier/Parsley.js/issues/640 ).
+  window.Parsley.on('field:error', function() {
+    this.$element.attr('aria-invalid', 'true');
+  });
+  window.Parsley.on('field:success', function() {
+    this.$element.attr('aria-invalid', 'false');
+  });
+  
+	// Accordion
+	$( ".gs_accordion-nest" ).accordion({
+		collapsible: true,
+		heightStyle: "content",
+		active:false
+	});
+
+	// Social privacy buttons
+	if($("#socialshareprivacy").length > 0){
+		$("#socialshareprivacy").socialSharePrivacy({
+			services : {
+				facebook : {
+					"perma_option" : "off",
+					"status" : "on",
+					"dummy_img" : "typo3conf/ext/gesis_web_ext/Resources/Public/JavaScript/Vendor/socialshareprivacy/images/dummy_facebook_dark.png"
+				},
+				twitter : {
+					"perma_option" : "off",
+					"status" : "on",
+					"dummy_img" : "typo3conf/ext/gesis_web_ext/Resources/Public/JavaScript/Vendor/socialshareprivacy/images/dummy_twitter_dark.png"
+				},
+				gplus : {
+					"perma_option" : "off",
+					"status" : "off",
+					"dummy_img" : "typo3conf/ext/gesis_web_ext/Resources/Public/JavaScript/Vendor/socialshareprivacy/images/dummy_gplus_dark.png"
+				}
+			},
+			"css_path"  : "typo3conf/ext/gesis_web_ext/Resources/Public/JavaScript/Vendor/socialshareprivacy/styles/socialshareprivacy.css",
+			"lang_path" : "typo3conf/ext/gesis_web_ext/Resources/Public/JavaScript/Vendor/socialshareprivacy/lang/",
+			"language"  : language,
+			"skin" : "dark"
+		});
+	}
+
+	$(".gs_lightbox").fancybox({
+		beforeShow : function() {
+			var alt = this.element.find('img').attr('alt');
+			this.inner.find('img').attr('alt', alt);
+			this.title = alt;
+		},
+		prevEffect		: 'none',
+		nextEffect		: 'none',
+		helpers		: {
+			title	: {
+				type : 'outside'
+			},
+			buttons	: {}
+		}
+	});
+});
+// End of document-ready
+
+
+function init_gws() {
+  var gwsCombobox = document.getElementById('gs_gws_combobox');
+  var gwsInput = document.getElementById('gs_searchterm');
+  var gwsOutput = document.getElementById('gs_hitlist');
+  var gwsClearButton = document.getElementById('gs_search_clear');
+  var gwsToggleButton = document.getElementById('gs_search_toggle');
+  if (gwsCombobox && gwsInput && gwsOutput) {
+    var gwsWidget = new aria.ListboxCombobox(gwsCombobox, gwsInput, gwsOutput, fadeMainContent, unfadeMainContent);
+    gwsToggleButton.addEventListener('click', function() {
+      if (gwsWidget.shown) {
+        gwsWidget.hideListbox();
+      }
+      else {
+        gwsWidget.showListbox();
+      }
+    });
+    gwsClearButton.addEventListener('click', function() {
+      gwsWidget.clearInput();
+      gwsWidget.clearListbox();
+    });
+  }
+}
+
+function fadeMainContent() {
+  var faderElement = document.querySelector('.gs_fader');
+  faderElement.classList.add('faded');
+  
+  // following element style manipulation used during migration of old code to thid fadeMainContent until migration is complete 
+  faderElement.style.display = '';
+}
+
+function unfadeMainContent() {
+  var faderElement = document.querySelector('.gs_fader');
+  faderElement.classList.remove('faded');
+}
+
+function gs_adapt_mobile() {
+  // see https://stackoverflow.com/a/8876069/923560
+  var isMobile = window.matchMedia('(max-width: 960px), (hover: none), (pointer: coarse)').matches;
+  
+  if (isMobile) {
+    gs_is_mobile = true;
+  }
+  else {
+    gs_is_mobile = false;
+  }
+}
+
+//JavaScript-based workaround for skip link animation in IE 11 and Edge
+// as these browsers don't support :focus-within pseudostate as of 2020-05-20
+function onSkipLinksContainedFocusChange(event) {
+  thisContainer = this;
+  eventType = event.type;
+  eventTarget = event.target;
+  
+  if ('focusin' === eventType) {
+    previouslyFocusedElement = event.relatedTarget;
+    wasFocusPreviouslyAlreadyInsideContainer = thisContainer.contains(previouslyFocusedElement);
+    if (wasFocusPreviouslyAlreadyInsideContainer) {
+    }
+    else {
+      this.setAttribute('aria-expanded', 'true');
+    }
+  }
+  else if ('focusout' === eventType) {
+    newlyFocusedElement = event.relatedTarget;
+    isFocusStillInsideContainer = thisContainer.contains(newlyFocusedElement);
+    if (isFocusStillInsideContainer) {
+    }
+    else {
+      this.setAttribute('aria-expanded', 'false');
+    }
+  }
+}
+
+getFocusableAncestors = function(element) {
+  var focusableElements = Array.from(element
+    .querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'));
+  return focusableElements;
+};
+
+isElementVisibleAndDisplayed = function(element) {
+  var elementStyle = window.getComputedStyle(element);
+  if (elementStyle.display === 'none' || elementStyle.visibility === 'hidden') {
+    return false;
+  }
+  else {
+    var parentElement = element.parentElement;
+    if (parentElement) {
+      return isElementVisibleAndDisplayed(parentElement);
+    }
+    else {
+      // element has reached recursion end by having no parent / being the root "html" element
+      // each lineage elements is both displayed and visible
+      return true;
+    }
+  }
+};

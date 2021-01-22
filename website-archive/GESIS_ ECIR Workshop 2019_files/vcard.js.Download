@@ -1,0 +1,33 @@
+document.getElementsByClassName("gs_vcard_toggle").forEach(function (element) {
+  element.addEventListener('focusin', onContainedEventChange);
+  element.addEventListener('focusout', onContainedEventChange);
+  element.addEventListener('mouseover', onContainedEventChange);
+  element.addEventListener('mouseout', onContainedEventChange);
+  element.addEventListener('click', onContainedEventChange);
+});
+
+function onContainedEventChange(event) {
+  thisContainer = this;
+  eventType = event.type;
+  eventTarget = event.target;
+
+  if ('focusin' === eventType || 'mouseover' === eventType || 'click' === eventType) {
+    previouslyFocusedElement = event.relatedTarget;
+    wasFocusPreviouslyAlreadyInsideContainer = thisContainer.contains(previouslyFocusedElement);
+
+    if (wasFocusPreviouslyAlreadyInsideContainer) {} else {
+      //console.log("focus is now within");
+      document.querySelector(".gs_fader").style.display = "block";
+      document.querySelector(".gs_vcard").style.display = "block";
+    }
+  } else if ('focusout' === eventType || 'mouseout' === eventType || 'click' === eventType) {
+    newlyFocusedElement = event.relatedTarget;
+    isFocusStillInsideContainer = thisContainer.contains(newlyFocusedElement);
+
+    if (isFocusStillInsideContainer) {} else {
+      //console.log("focus has left");
+      document.querySelector(".gs_fader").style.display = "none";
+      document.querySelector(".gs_vcard").style.display = "none";
+    }
+  }
+}

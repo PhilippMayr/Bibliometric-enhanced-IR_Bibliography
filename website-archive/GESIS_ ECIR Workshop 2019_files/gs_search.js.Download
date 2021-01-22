@@ -1,0 +1,355 @@
+/*
+*   This content is licensed according to the W3C Software License at
+*   https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+*   
+*   Adapted for GESIS-Web, www.gesis.org
+*/
+
+/**
+ * @namespace aria
+ */
+var aria = aria || {};
+
+/**
+ * @desc
+ *  Key code constants
+ */
+aria.KeyCode = {
+  BACKSPACE: 8,
+  TAB: 9,
+  RETURN: 13,
+  ESC: 27,
+  SPACE: 32,
+  PAGE_UP: 33,
+  PAGE_DOWN: 34,
+  END: 35,
+  HOME: 36,
+  LEFT: 37,
+  UP: 38,
+  RIGHT: 39,
+  DOWN: 40,
+  DELETE: 46
+};
+
+/**
+ * @constructor
+ *
+ * @desc
+ *  Combobox object representing the state and interactions for a combobox
+ *  widget
+ *
+ * @param comboboxNode
+ *  The DOM node pointing to the combobox
+ * @param input
+ *  The input node
+ * @param listbox
+ *  The listbox node to load results in
+ */
+aria.ListboxCombobox = function(
+  combobox,
+  input,
+  listbox,
+  onShow,
+  onHide
+) {
+  this.combobox = combobox;
+  this.input = input;
+  this.listbox = listbox;
+  this.listbox.tabIndex = -1; // make result list focusable-on-click so that hideListbox can check relatedTarget being inside or outside of result list
+  
+  this.onShow = onShow || function() {};
+  this.onHide = onHide || function() {};
+  this.activeIndex = -1;
+  this.resultsCount = 0;
+  this.resultsItems = [];
+  this.shown = false;
+  this.previousInput = '';
+  this.hasResponse = false;
+  this.httpRequest = new XMLHttpRequest();
+  this.setupEvents();
+};
+
+aria.ListboxCombobox.prototype.setupEvents = function() {
+  this.combobox.addEventListener('focusout', this.checkHide.bind(this));
+  this.input.addEventListener('keydown', this.setActiveItem.bind(this));
+  this.input.addEventListener('keyup', this.checkKey.bind(this));
+  this.input.addEventListener('focus', this.checkShow.bind(this));
+};
+
+aria.ListboxCombobox.prototype.checkKey = function(evt) {
+  var key = evt.which || evt.keyCode;
+  
+  switch (key) {
+    case aria.KeyCode.UP:
+    case aria.KeyCode.DOWN:
+    case aria.KeyCode.ESC:
+    case aria.KeyCode.RETURN:
+      evt.preventDefault();
+      return;
+    default:
+      if (this.input.value.length <= 2) {
+        /* the following abort is neccessary in situations where there is
+         * a concurrently running response-waiting request for a three-letter
+         * query which then gets backspaced to a two-letter input
+         */
+        this.httpRequest.abort();
+        this.clearListbox();
+      }
+      else {
+        if (this.previousInput === this.input.value) {
+          // console.log("textual input did not change by this key interaction");
+        }
+        else {
+          this.updateResults();
+        }
+        
+      }
+  }
+  
+};
+
+aria.ListboxCombobox.prototype.updateResults = function() {
+  // cancel possibly response-waiting previous request
+  this.httpRequest.abort();
+  
+  var searchString = this.input.value;
+  var gwsRequestUrl = "typo3conf/ext/gesis_web_ext/Resources/Public/PHP/gs_search_connector.php?term=" + encodeURI(searchString) + "&lang=" + encodeURI(language);
+  this.httpRequest = new XMLHttpRequest();
+  this.httpRequest.addEventListener("load", this.processGwsResults.bind(this));
+  this.httpRequest.open("GET", gwsRequestUrl);
+  this.httpRequest.send();
+};
+
+aria.ListboxCombobox.prototype.clearInput = function() {
+  this.input.value = '';
+}
+
+aria.ListboxCombobox.prototype.setActiveItem = function(evt) {
+  this.previousInput = this.input.value;
+  
+  var key = evt.which || evt.keyCode;
+  var activeIndex = this.activeIndex;
+  
+  if (key === aria.KeyCode.ESC) {
+    this.httpRequest.abort();
+    this.hideListbox();
+    this.clearInput();
+    return;
+  }
+  
+  var prevActive = this.getItemAt(activeIndex);
+  var activeItem;
+  
+  switch (key) {
+    case aria.KeyCode.UP:
+      if (activeIndex <= 0) {
+        activeIndex = this.resultsCount - 1;
+      }
+      else {
+        activeIndex--;
+      }
+      break;
+    case aria.KeyCode.DOWN:
+      if (activeIndex === -1 || activeIndex >= this.resultsCount - 1) {
+        activeIndex = 0;
+      }
+      else {
+        activeIndex++;
+      }
+      break;
+    case aria.KeyCode.RETURN:
+      activeItem = this.getItemAt(activeIndex);
+      if (activeItem) {
+        this.selectItem(activeItem);
+      }
+      else {
+        this.updateResults();
+      }
+      return;
+    case aria.KeyCode.TAB:
+      this.hideListbox();
+      return;
+    default:
+      return;
+  }
+  
+  evt.preventDefault();
+  
+  activeItem = this.getItemAt(activeIndex);
+  this.activeIndex = activeIndex;
+  
+  if (prevActive) {
+    prevActive.classList.remove('focused');
+    prevActive.setAttribute('aria-selected', 'false');
+  }
+  
+  if (activeItem) {
+    this.input.setAttribute('aria-activedescendant', 'result-item-' + activeIndex);
+    activeItem.classList.add('focused');
+    activeItem.setAttribute('aria-selected', 'true');
+    activeItem.scrollIntoView({behavior: "smooth", block: "center", inline: "center"});
+    // activeItem.scrollIntoView({behavior: "smooth", block: "nearest", inline: "nearest"});
+  }
+  else {
+    this.input.removeAttribute('aria-activedescendant');
+  }
+};
+
+aria.ListboxCombobox.prototype.getItemAt = function(index) {
+  var indexItem = this.resultsItems[index];
+  return indexItem;
+};
+
+aria.ListboxCombobox.prototype.clickItem = function(evt) {
+  if (evt.target && evt.target.nodeName == 'LI') {
+    this.selectItem(evt.target);
+  }
+};
+
+aria.ListboxCombobox.prototype.selectItem = function(item) {
+  if (item) {
+    item.click();
+  }
+};
+
+aria.ListboxCombobox.prototype.checkShow = function(evt) {
+  if (this.hasResponse) {
+    this.showListbox();
+  }
+};
+
+aria.ListboxCombobox.prototype.checkHide = function(event) {
+  var eventType = event.type;
+  
+  var relatedTarget = event.relatedTarget;
+  
+  var eventTarget = event.target;
+  if ('focusout' === eventType) {
+    if (this.input.contains(relatedTarget) || this.combobox.contains(relatedTarget) || this.listbox.contains(relatedTarget)) {
+    }
+    else {
+      this.hideListbox();
+    }
+  }
+};
+
+aria.ListboxCombobox.prototype.clearListbox = function() {
+  this.activeIndex = -1;
+  this.listbox.innerHTML = '';
+  this.resultsCount = 0;
+  this.resultsItems = [];
+  this.hasResponse = false;
+  this.input.removeAttribute('aria-activedescendant');
+  
+  this.hideListbox();
+};
+
+aria.ListboxCombobox.prototype.hideListbox = function() {
+  this.combobox.setAttribute('aria-expanded', 'false');
+  this.shown = false;
+  this.onHide();
+};
+
+aria.ListboxCombobox.prototype.showListbox = function() {
+  this.combobox.setAttribute('aria-expanded', 'true');
+  this.shown = true;
+  this.onShow();
+};
+
+aria.ListboxCombobox.prototype.processGwsResults = function() {
+  this.clearListbox();
+  
+  this.hasResponse = true;
+  
+  var wrapper = document.createElement('div');
+  wrapper.innerHTML = this.httpRequest.responseText;
+  var responseTree = wrapper.firstElementChild;
+  this.listbox.appendChild(responseTree);
+  
+  var maybeSearchResultCarousel = responseTree.querySelector('.gs_search_owl-carousel');
+  
+  var carousel = tns({
+    container: maybeSearchResultCarousel,
+    items: 1,
+    responsive: {
+      640: {
+        items: 2
+      },
+      960: {
+        items: 3
+      }
+    },
+    gutter: 16,
+    slideBy: 'page',
+    controls: true,
+    controlsText: ['', ''],
+    nav: true,
+    navPosition: 'top',
+    arrowKeys: true,
+    speed: 200,
+    autoplay: true,
+    autoplayTimeout: 10000,
+    autoplayPosition: 'top',
+    autoplayText: ['', ''],
+    autoplayHoverPause: true,
+    autoplayButton: false,
+    autoplayButtonOutput: true,
+    mouseDrag: true,
+    swipeAngle: false,
+    rewind: true,
+    locale: language,
+    useLocalStorage: false
+  });
+  
+  this.showListbox();
+  
+  var focusableElements = Array.from(responseTree
+    .querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'))
+    .filter(function(element) {
+      /* One of the constraints for an element to be actually
+       * focusable is that it and all its ancestors must be
+       * both CSS-visible and CSS-displayed 
+       */
+      var result = isElementVisibleAndDisplayed(element);
+      return result;
+    }) ;
+  
+  /* the following removes all search results from the page's regular
+   * tab order. Instead search results will be pseudo-focusable /
+   * selectable by arrow key navigation, which is conventional WCAG
+   * combobox behavior
+   */
+  focusableElements.forEach(function(element, index) {
+    element.tabIndex = -1;
+    element.classList.add("result");
+    element.setAttribute("role", "option");
+    
+    /* if the arrow key-selectable search result item does not have an
+     * id yet, it hereby gets one so that search input's
+     * aria-activedescendant can potentially point to it when this element is selected
+     */
+    
+    element.id ? null : element.id = 'result-item-' + index;
+  });
+  
+  this.resultsCount = focusableElements.length;
+  this.resultsItems = focusableElements;
+};
+
+isElementVisibleAndDisplayed = function(element) {
+  var elementStyle = window.getComputedStyle(element);
+  if (elementStyle.display === 'none' || elementStyle.visibility === 'hidden') {
+    return false;
+  }
+  else {
+    var parentElement = element.parentElement;
+    if (parentElement) {
+      return isElementVisibleAndDisplayed(parentElement);
+    }
+    else {
+      // element has reached recursion end by having no parent / being the root "html" element
+      // each lineage elements is both displayed and visible
+      return true;
+    }
+  }
+};

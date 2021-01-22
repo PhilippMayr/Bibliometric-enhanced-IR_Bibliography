@@ -1,0 +1,199 @@
+// Popup implements patterns from
+// https://www.w3.org/TR/wai-aria-practices-1.1/examples/listbox/listbox-collapsible.html
+// https://www.w3.org/TR/wai-aria-practices-1.1/#Listbox
+// TODO leverage https://www.w3.org/WAI/PF/aria-1.1/states_and_properties#aria-owns and https://www.w3.org/WAI/PF/aria-1.1/states_and_properties#aria-controls
+// TODO use aria-activedescendant
+// TODO allow quickselection by typing printable character
+var Popup = function(domNode, controllerNode, onOpen, onClose) {
+  this.domNode = domNode;
+  this.controllerNode = controllerNode;
+  this.onOpen = onOpen || function() {};
+  this.onClose = onClose || function() {};
+  
+  this.init();
+};
+
+Popup.prototype.init = function() {
+  this.domNode.setAttribute('aria-haspopup', 'listbox');
+  
+  this.controllerNode.setAttribute('role', 'listbox');
+  this.controllerNode.tabIndex = 0;
+  
+  this.controllerNode.addEventListener('keydown', this.handleKeydown.bind(this));
+  this.controllerNode.addEventListener('mouseenter', this.handleMouseenter.bind(this));
+  this.controllerNode.addEventListener('mouseleave', this.handleMouseleave.bind(this));
+  this.controllerNode.addEventListener('click', this.handleClick.bind(this));
+  
+  this.controllerNode.addEventListener('focusout', this.handleFocusChange.bind(this));
+  
+  var focusablePopupElements = getFocusableAncestors(this.domNode);
+  focusablePopupElements.forEach(function(element, index) {
+    element.tabIndex = -1;
+    element.setAttribute('role', 'option');
+  });
+};
+
+Popup.prototype.handleMouseenter = function(event) {
+  this.openPopup();
+};
+
+Popup.prototype.handleMouseleave = function(event) {
+  this.closePopup();
+};
+
+Popup.prototype.handleClick = function(event) {
+  if ( this.isPopupOpen() ) {
+    this.closePopup();
+  }
+  else {
+    this.openPopup();
+  }
+};
+
+Popup.prototype.handleFocusChange = function(event) {
+  var eventType = event.type;
+  var relatedTarget = event.relatedTarget;
+
+  if ('focusout' === eventType) {
+    if ( this.controllerNode.contains(relatedTarget) ) {
+    }
+    else {
+      this.closePopup();
+    }
+  }
+};
+
+Popup.prototype.isPopupOpen = function() {
+  var isExpanded = this.controllerNode.getAttribute('aria-expanded');
+  var isOpen = (isExpanded === 'true');
+  return isOpen;
+};
+
+Popup.prototype.openPopup = function() {
+  this.controllerNode.setAttribute('aria-expanded', 'true');
+  this.onOpen();
+};
+
+Popup.prototype.closePopup = function() {
+  this.controllerNode.setAttribute('aria-expanded', 'false');
+  this.onClose();
+};
+
+Popup.prototype.selectNextElement = function() {
+  var selectableElements = Array.from(this.domNode.querySelectorAll('[role="option"]'));
+  
+  var currentlySelectedElement = this.getCurrentlySelectedElement();
+  var index = selectableElements.indexOf(currentlySelectedElement);
+  if (index <= -1) {
+    // none selected yet
+    this.selectElement(selectableElements[0]);
+  }
+  else if ( index === (selectableElements.length - 1) ) {
+    // roll-around
+    this.unselectElement(currentlySelectedElement);
+    this.selectElement(selectableElements[0]);
+  }
+  else {
+    this.unselectElement(currentlySelectedElement);
+    this.selectElement(selectableElements[index + 1]);
+  }
+};
+
+Popup.prototype.selectPreviousElement = function() {
+  var selectableElements = Array.from(this.domNode.querySelectorAll('[role="option"]'));
+  
+  var currentlySelectedElement = this.getCurrentlySelectedElement();
+  var index = selectableElements.indexOf(currentlySelectedElement);
+  if (index <= -1 ) {
+    // none selected yet
+    this.selectElement(selectableElements.lastItem);
+  }
+  else if ( index === 0 ) {
+    // roll-around
+    this.unselectElement(currentlySelectedElement);
+    this.selectElement(selectableElements.lastItem);
+  }
+  else {
+    this.unselectElement(currentlySelectedElement);
+    this.selectElement(selectableElements[index - 1]);
+  }
+};
+
+Popup.prototype.getCurrentlySelectedElement = function() {
+  var result = this.domNode.querySelector('[aria-selected="true"]');
+  return result;
+};
+
+Popup.prototype.selectElement = function(element) {
+  element.setAttribute('aria-selected', "true");
+  element.focus();
+};
+
+Popup.prototype.unselectElement = function(element) {
+  element.setAttribute('aria-selected', "false");
+};
+
+Popup.prototype.selectFirstElement = function() {
+  var currentlySelectedElement = this.getCurrentlySelectedElement();
+  this.unselectElement(currentlySelectedElement);
+  var firstElement = this.domNode.querySelector('[role="option"]');
+  this.selectElement(firstElement);
+};
+
+Popup.prototype.selectLastElement = function() {
+  var currentlySelectedElement = this.getCurrentlySelectedElement();
+  this.unselectElement(currentlySelectedElement);
+  var selectableElements = this.domNode.querySelectorAll('[role="option"]');
+  var lastElement = selectableElements[selectableElements.length - 1];
+  this.selectElement(lastElement);
+};
+
+Popup.prototype.handleKeydown = function(event) {
+  switch (event.keyCode) {
+    case keyCode.SPACE:
+    case keyCode.DOWN:
+      event.stopPropagation();
+      event.preventDefault();
+      this.openPopup();
+      this.selectNextElement();
+      break;
+    case keyCode.UP:
+      event.stopPropagation();
+      event.preventDefault();
+      this.openPopup();
+      this.selectPreviousElement();
+      break;
+    case keyCode.ESC:
+    case keyCode.LEFT:
+    case keyCode.RIGHT:
+      event.stopPropagation();
+      event.preventDefault();
+      this.closePopup();
+      this.controllerNode.focus();
+      break;
+    case keyCode.RETURN:
+      event.stopPropagation();
+      event.preventDefault();
+      this.openPopup();
+      var currentlySelectedElement = this.getCurrentlySelectedElement();
+      if (currentlySelectedElement) {
+        currentlySelectedElement.click();
+      }
+      else {
+        this.selectNextElement();
+      }
+      break;
+    case keyCode.HOME:
+      event.stopPropagation();
+      event.preventDefault();
+      this.openPopup();
+      this.selectFirstElement();
+      break;
+    case keyCode.END:
+      event.stopPropagation();
+      event.preventDefault();
+      this.openPopup();
+      this.selectLastElement();
+      break;
+  }
+}
