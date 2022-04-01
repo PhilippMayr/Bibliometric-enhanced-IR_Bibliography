@@ -1,5 +1,5 @@
 # Bibliometric-enhanced-IR Bibliography
-Here we collect bibtex files which make up the "Bibliographies of the Bibliometric-enhanced Information Retrieval" (BIR) workshops and related other workshops and special issues. 
+Here we collect bibtex files `.bib` which make up the "Bibliographies of the Bibliometric-enhanced Information Retrieval" (BIR) workshops and related other workshops and special issues. 
 All workshop papers are freely available in full text via CEUR or other workshop proceedings.
 
 ## Workshops
