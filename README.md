@@ -7,7 +7,7 @@ All workshop papers are freely available in full text via CEUR or other workshop
 * BIR - Bibliometric-enhanced Information Retrieval (ECIR 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022)
 * CLBIB - Computational Linguistics and Bibliometrics (ISSI 2015, 2017)
 * BIRNDL - Bibliometric-enhanced Information Retrieval and Natural Language Processing for Digital Libraries (JCDL 2016), (SIGIR 2017, 2018, 2019)
-* SDP - Workshop on Scholarly Document Processing (EMNLP 2020), (NAACL 2021)
+* SDP - Workshop on Scholarly Document Processing (EMNLP 2020), (NAACL 2021), (COLING 2022)
 
 ## Special Issues
 
